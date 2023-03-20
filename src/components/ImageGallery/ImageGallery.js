@@ -11,7 +11,7 @@ export class ImageGallery extends Component {
     images: [],
 
     status: 'idle',
-    page: 10,
+    page: 1,
     maxPage: 1,
     showModal: false,
     modalImg: '',
@@ -30,8 +30,8 @@ export class ImageGallery extends Component {
         .then(resp => {
           this.setState({
             images: [...this.state.images, ...resp.hits],
-            status: 'resolved',
             maxPage: resp.totalHits / PER_PAGE,
+            status: 'resolved',
           });
         })
         .catch(error => {
@@ -49,6 +49,7 @@ export class ImageGallery extends Component {
   //   });
   // };
   loadNextPage = () => {
+    this.setState({ status: 'pending' });
     this.setState(({ page }) => ({ page: page + 1 }));
   };
   handleClickImg = index => {
@@ -64,30 +65,32 @@ export class ImageGallery extends Component {
   render() {
     const { status, images, page, maxPage, showModal, modalImg } = this.state;
 
-    if (status === 'pending') return <Loader />;
-    if (status === 'resolved') {
-      return (
-        <div>
-          {showModal && (
-            <Modal onClose={this.toggleModal}>
-              <img src={images[modalImg].largeImageURL} alt=""></img>
-            </Modal>
-          )}
-          <List>
-            {images.map(({ id, webformatURL }, index) => (
-              <ImageGalleryItem
-                key={id}
-                onClick={() => this.handleClickImg(index)}
-                webformatURL={webformatURL}
-              />
-            ))}
-          </List>
-          {page < maxPage && (
-            <Button onClick={this.loadNextPage}>Load more</Button>
-          )}
-        </div>
-      );
-    }
+    // if (status === 'pending') return <Loader />;
+    // if (status === 'resolved') {
+    return (
+      <div>
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <img src={images[modalImg].largeImageURL} alt=""></img>
+          </Modal>
+        )}
+
+        <List>
+          {images.map(({ id, webformatURL }, index) => (
+            <ImageGalleryItem
+              key={id}
+              onClick={() => this.handleClickImg(index)}
+              webformatURL={webformatURL}
+            />
+          ))}
+        </List>
+        {status === 'pending' && <Loader />}
+        {page < maxPage && (
+          <Button onClick={this.loadNextPage}>Load more</Button>
+        )}
+      </div>
+    );
+    // }
   }
 }
 
