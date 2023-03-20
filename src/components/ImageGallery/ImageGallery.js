@@ -64,9 +64,6 @@ export class ImageGallery extends Component {
 
   render() {
     const { status, images, page, maxPage, showModal, modalImg } = this.state;
-
-    // if (status === 'pending') return <Loader />;
-    // if (status === 'resolved') {
     return (
       <div>
         {showModal && (
