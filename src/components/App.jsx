@@ -12,7 +12,6 @@ export class App extends Component {
   render() {
     return (
       <div>
-        <div id="modal-root"></div>
         <Searchbar onSubmit={this.handleSubmit}></Searchbar>
         <ImageGallery searchValue={this.state.shearchValue}></ImageGallery>
       </div>

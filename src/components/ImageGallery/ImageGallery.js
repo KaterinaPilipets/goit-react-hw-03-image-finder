@@ -19,7 +19,9 @@ export class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevSearchValue = prevProps.searchValue.trim();
     const curentSearchValue = this.props.searchValue.trim();
-
+    if (prevSearchValue !== curentSearchValue) {
+      this.startSearch();
+    }
     if (
       prevSearchValue !== curentSearchValue ||
       prevState.page !== this.state.page
@@ -40,14 +42,14 @@ export class ImageGallery extends Component {
         });
     }
   }
-  // startSearch = searchValue => {
-  //   this.setState({
-  //     page: 1,
-  //     images: [],
-  //     maxPage: 1,
-  //     modalImg: '',
-  //   });
-  // };
+  startSearch = searchValue => {
+    this.setState({
+      page: 1,
+      images: [],
+      maxPage: 1,
+      modalImg: '',
+    });
+  };
   loadNextPage = () => {
     this.setState({ status: 'pending' });
     this.setState(({ page }) => ({ page: page + 1 }));
@@ -82,7 +84,7 @@ export class ImageGallery extends Component {
           ))}
         </List>
         {status === 'pending' && <Loader />}
-        {page < maxPage && (
+        {page < maxPage && status !== 'pending' && (
           <Button onClick={this.loadNextPage}>Load more</Button>
         )}
       </div>
